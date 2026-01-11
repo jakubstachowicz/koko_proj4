@@ -1,0 +1,11 @@
+<ksiazka>
+  <rozdzial>
+    <tytul>Wstep do programowania</tytul>
+    <akapit>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+    </akapit>
+    <akapit>
+      To jest bardzo dlugie zdanie, ktore ma na celu przetestowanie czy Twój analizator poprawnie przenosi cale slowa do nowej linii, zamiast ucinac je w polowie, gdy tekst zbliza sie do prawej krawedzi ekranu zdefiniowanej w stalej LINE_WIDTH.
+    </akapit>
+  </rozdzial>
+</ksiazka>

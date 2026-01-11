@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<katalog>
+    <produkt>
+        <nazwa>Komputer</nazwa>
+        <cena>2500</cena>
+        <dostepny/>
+    </produkt>
+    <produkt>
+        <nazwa>Myszka</nazwa>
+        <cena>50</cena>
+    </produkt>
+</katalog>
