@@ -6,7 +6,7 @@ LEX=flex
 	$(CC) $< $*.o $(LDFLAGS) -o $@
 
 %.tab.c %.tab.h: %.y
-	bison -d $<
+	bison -d -v $<
 
 %.c: %.l %.tab.h
 	$(LEX) -t $< > $@
@@ -14,4 +14,4 @@ LEX=flex
 p: p.y p.l
 
 clean:
-	rm -f p p.c p.tab.c p.tab.h *.o
+	rm -f p p.c p.tab.c p.tab.h *.o p.output

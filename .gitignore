@@ -4,3 +4,4 @@ helper
 helper.*
 .vscode/
 *.out
+p.output
