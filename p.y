@@ -70,12 +70,13 @@ end_tag:
 zawartosc:
     zawartosc element
     | zawartosc S 
-    | zawartosc word
+    | zawartosc word { indent(level); printf("\"%s\"\n", $2); }
     | zawartosc '\n'
     | %empty
 
 word:
-    CHAR
+    word CHAR { strcpy($$, $1); $$[pos] = *$2; pos++; $$[pos] = '\0'; }
+    | CHAR { *$$ = *$1; $$[1] = '\0'; pos = 1; }
     ;
 
 %%
