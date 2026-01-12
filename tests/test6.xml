@@ -1,0 +1,9 @@
+<glowny_element>
+    <ns:tag-z-myslnikiem>Wartosc 1</ns:tag-z-myslnikiem>
+        tekst w srodeczku
+    <_prywatne>Wartosc 2</_prywatne>
+    <tag123>Cyfry sa ok, ale nie na poczatku</tag123><!-- -->
+    <!--<123blad>To jest zle</123blad> komentarz
+        <tego_znacznika nie="powinno" tutaj="byc" />
+    -->
+</glowny_element>

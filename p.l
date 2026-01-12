@@ -3,19 +3,21 @@
     #include <string.h>
     #include "defs.h"
     #include "p.tab.h"
+    
+    int yyerror(const char *txt);
 %}
 
 %x ST_COMMENT
 %x ST_PI
 %x ST_TAG
 
-IDENT ([a-zA-Z]|":"|"_")[a-zA-Z0-9":""_""-"]*
+IDENT ([a-zA-Z]|:|_)[a-zA-Z0-9":""_"\-]*
 
 %%
 
 <INITIAL>"<!--" { BEGIN(ST_COMMENT); }
 <ST_COMMENT>"-->" { BEGIN(INITIAL); }
-<ST_COMMENT><<EOF>> { printf("Niedomkniety komentarz"); }
+<ST_COMMENT><<EOF>> { return yyerror("Niedomkniety komentarz"); }
 <ST_COMMENT>. 
 
 <INITIAL>"<?"{IDENT} { BEGIN(ST_PI); strncpy(yylval.s, yytext + 2, MAXSTRLEN); return PI_TAG_BEG; }

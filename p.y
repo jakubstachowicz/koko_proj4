@@ -4,11 +4,17 @@
     #include "defs.h"
 
     int level = 0;
-    int pos = 0;
+    int pos = 0;  // do budowania slowa
+    int line_pos = 0; // do ograniczonej dlugosci wiersza
+    
     const int INDENT_LENGTH = 4; 
     const int LINE_WIDTH = 78;
 
     void indent(int poziom);
+    void print_word(char *txt);
+    void ensure_newline();
+    int yyerror(const char *txt);
+    int yylex();
 %}
 
 %union{
@@ -43,11 +49,11 @@ znaki_biale_i_nowego_wiersza:
     ;
 
 pi:
-    PI_TAG_BEG PI_TAG_END { printf("<? \"%s\" ?>\n", $1); }
+    PI_TAG_BEG PI_TAG_END { ensure_newline(); indent(level); printf("<? \"%s\" ?>\n", $1); line_pos = 0; }
     ;
 
 element:
-    pusty_znacznik { indent(level); printf("< \"%s\" />\n", $1); }
+    pusty_znacznik { ensure_newline(); indent(level); printf("< \"%s\" />\n", $1); line_pos = 0; }
     | para_znacznikow
     ;
 
@@ -56,21 +62,21 @@ pusty_znacznik:
     ;
 
 para_znacznikow:
-    start_tag zawartosc end_tag  { if (strcmp($1, $3) != 0) { indent(level); printf("ERROR: Niezgodność znaczników: \"%s\" i \"%s\"\n", $1, $3); } }
+    start_tag zawartosc end_tag  { if (strcmp($1, $3) != 0) { ensure_newline(); indent(level); printf("ERROR: Niezgodność znaczników: \"%s\" i \"%s\"\n", $1, $3); line_pos = 0; } }
     ;
 
 start_tag:
-    STAG_BEG TAG_END { indent(level); printf("< \"%s\" >\n", $1); level++; }
+    STAG_BEG TAG_END { ensure_newline(); indent(level); printf("< \"%s\" >\n", $1); level++; line_pos = 0; }
     ;
 
 end_tag:
-    ETAG_BEG TAG_END { level--; indent(level); printf("</ \"%s\" >\n", $1); }
+    ETAG_BEG TAG_END { level--; ensure_newline(); indent(level); printf("</ \"%s\" >\n", $1); line_pos = 0; }
     ;
 
 zawartosc:
     zawartosc element
     | zawartosc S 
-    | zawartosc word { indent(level); printf("\"%s\"\n", $2); }
+    | zawartosc word { print_word($2); }
     | zawartosc '\n'
     | %empty
 
@@ -86,9 +92,9 @@ int main() {
     return 0;
 }
 
-void yyerror(const char *txt)
+int yyerror(const char *txt)
 {
-	printf("Syntax error %s\n", txt);
+    printf("Syntax error %s\n", txt);
     return 0;
 }
 
@@ -97,5 +103,37 @@ void indent(int poziom) {
         for (int j = 0; j < INDENT_LENGTH; j++) {
             printf(" ");
         }
+    }
+}
+
+void print_word(char *txt) {
+    int len = strlen(txt);
+    int indent_size = level * INDENT_LENGTH;
+
+    if (line_pos == 0) {
+        indent(level);
+        line_pos = indent_size;
+    }
+
+    int space_needed = (line_pos == indent_size) ? 0 : 1;
+    
+    if (line_pos + space_needed + len > LINE_WIDTH) {
+        printf("\n");
+        indent(level);
+        printf("%s", txt);
+        line_pos = indent_size + len;
+    } else {
+        if (space_needed) {
+            printf(" ");
+        }
+        printf("%s", txt);
+        line_pos += space_needed + len;
+    }
+}
+
+void ensure_newline() {
+    if (line_pos > 0) {
+        printf("\n");
+        line_pos = 0;
     }
 }
